@@ -124,8 +124,9 @@ export class JSDebugMessage extends DebugMessage {
     }${
       // File
       includeFileNameAndLineNum
-        ? `${this.getDelimitterForMsgContent(extensionProperties, true)}
-        ${hasFilePrefix ? 'file: ' : ''}${fileName}:${
+        ? `${this.getDelimitterForMsgContent(extensionProperties, true)}${
+            hasFilePrefix ? `file: ` : ``
+          }${fileName}:${
             lineOfLogMsg + (insertEmptyLineBeforeLogMessage ? 2 : 1)
           } ${this.getDelimitterForMsgContent(extensionProperties, false)}`
         : ''
@@ -171,13 +172,8 @@ export class JSDebugMessage extends DebugMessage {
   private getPrefixForMsgContent(
     extensionProperties: PartialExtensionProperties,
   ): string {
-    const { hasMessagePrefix, logMessagePrefix, delimitterPosition } =
-      extensionProperties;
-    return !hasMessagePrefix
-      ? ''
-      : ['both', 'before'].includes(delimitterPosition)
-      ? `${logMessagePrefix}`
-      : `${logMessagePrefix} `;
+    const { hasMessagePrefix, logMessagePrefix } = extensionProperties;
+    return hasMessagePrefix ? `${logMessagePrefix}` : '';
   }
 
   private getSubfixForMsgContent(

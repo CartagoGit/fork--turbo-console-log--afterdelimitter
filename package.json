@@ -121,9 +121,9 @@
           "default": "before",
           "description": "It assigns the position of the delimitter between elements"
         } ,
-        "turboConsoleLog.hasFilePreffix": {
-          "type": "string",
-          "default": false,
+        "turboConsoleLog.hasFilePrefix": {
+          "type": "boolean",
+          "default": true,
           "description": "Show/hide 'file' before the file name"
         }
       }
@@ -170,7 +170,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish:linux": "yarn run compile",
+    "vscode:prepublish:win": "yarn run compile",
     "compile": "rm -rf out && tsc -p ./ && mkdir -p out/test/files/js && cp -r src/test/files/js out/test/files",
     "lint": "eslint src --ext ts",
     "watch": "tsc -watch -p ./",
@@ -181,7 +181,9 @@
     "vscode:prepublish": "yarn run compile:win",
     "compile:win": "rd /s /q out && tsc -p ./ && mkdir out\\test\\files\\js && copy src\\test\\files\\js out\\test\\files\\js",
     "pretest:win": "yarn run compile:win",
-    "test:win": "node ./out/test/runTest.js"
+    "test:win": "node ./out/test/runTest.js",
+    "precompile:vsix" : "tsc -p ./",
+    "compile:vsix": "vsce package"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",

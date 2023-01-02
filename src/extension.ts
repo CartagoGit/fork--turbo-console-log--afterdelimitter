@@ -197,7 +197,7 @@ function getExtensionProperties(
     logMessageSubfix: workspaceConfig.logMessageSubfix ?? '⏩',
     hasMessageSubfix: workspaceConfig.hasMessageSubfix ?? false,
     delimitterPosition: workspaceConfig.delimitterPosition ?? 'before',
-    hasFilePrefix: workspaceConfig.hasFilePrefix ?? false,
+    hasFilePrefix: workspaceConfig.hasFilePrefix ?? true,
   };
 }
 
