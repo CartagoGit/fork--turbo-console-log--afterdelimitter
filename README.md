@@ -131,6 +131,14 @@ Initial release of Turbo Console Log
 
 ## Participate
 
+### 2.6.201 - Forked by Cartago Nova
+
+- hasMessagePrefix extension property is added - boolean
+- logMessageSubfix extension property is added - string
+- hasMessageSubfix extension property is added - noolean
+- delimitterPosition extension property is added - 'before' | 'after' | 'both | 'none'
+- hasFilePrefix extension property is added - boolean
+
 ---
 
 You're more than welcome to participate in the development of the extension by creating pull requests and submitting issues, link of the project in github: https://github.com/Chakroun-Anas/turbo-console-log

@@ -6,6 +6,7 @@ import {
   LogMessageType,
   Message,
   PartialExtensionProperties,
+  enumLogType,
 } from '../../entities';
 import { LineCodeProcessing } from '../../line-code-processing';
 import _, { omit } from 'lodash';
@@ -97,6 +98,7 @@ export class JSDebugMessage extends DebugMessage {
       insertEnclosingClass,
       insertEnclosingFunction,
       quote,
+      hasFilePrefix,
     } = extensionProperties;
 
     const fileName = document.fileName.includes('/')
@@ -113,7 +115,6 @@ export class JSDebugMessage extends DebugMessage {
       'class',
     );
     const semicolon: string = addSemicolonInTheEnd ? ';' : '';
-
     return `${
       // Function type - Example console.log( ...
       this.getFunctionForMsgContent(extensionProperties)
@@ -124,7 +125,7 @@ export class JSDebugMessage extends DebugMessage {
       // File
       includeFileNameAndLineNum
         ? `${this.getDelimitterForMsgContent(extensionProperties, true)}
-        file: ${fileName}:${
+        ${hasFilePrefix ? 'file: ' : ''}${fileName}:${
             lineOfLogMsg + (insertEmptyLineBeforeLogMessage ? 2 : 1)
           } ${this.getDelimitterForMsgContent(extensionProperties, false)}`
         : ''
@@ -142,34 +143,54 @@ export class JSDebugMessage extends DebugMessage {
         funcThatEncloseTheVar,
         extensionProperties,
       )
-    }${
+    }${this.getDelimitterForMsgContent(extensionProperties, true)}${
       // Variable
       selectedVar
-    }${quote}${
+    }${this.getDelimitterForMsgContent(extensionProperties, false)}${
       // Subfix
       this.getSubfixForMsgContent(extensionProperties)
-    }, ${selectedVar})${semicolon}`;
+    }${quote} , ${selectedVar})${semicolon}`;
   }
 
   private getFunctionForMsgContent(
     extensionProperties: PartialExtensionProperties,
   ): string {
     const { logType, logFunction } = extensionProperties;
-    return logFunction !== 'log' ? logFunction : `console.${logType}`;
+    const consoleTypes: Array<enumLogType> = [
+      enumLogType.log,
+      enumLogType.warn,
+      enumLogType.error,
+      enumLogType.debug,
+      enumLogType.table,
+    ];
+    return !consoleTypes.includes(logFunction as enumLogType)
+      ? logFunction
+      : `console.${logType}`;
   }
 
   private getPrefixForMsgContent(
     extensionProperties: PartialExtensionProperties,
   ): string {
-    const { hasMessagePrefix, logMessagePrefix } = extensionProperties;
-    return hasMessagePrefix ? `${logMessagePrefix} ` : '';
+    const { hasMessagePrefix, logMessagePrefix, delimitterPosition } =
+      extensionProperties;
+    return !hasMessagePrefix
+      ? ''
+      : ['both', 'before'].includes(delimitterPosition)
+      ? `${logMessagePrefix}`
+      : `${logMessagePrefix} `;
   }
 
   private getSubfixForMsgContent(
     extensionProperties: PartialExtensionProperties,
   ): string {
-    const { hasMessageSubfix, logMessageSubfix } = extensionProperties;
-    return hasMessageSubfix ? `${logMessageSubfix} ` : '';
+    const { hasMessageSubfix, logMessageSubfix, delimitterPosition } =
+      extensionProperties;
+
+    return !hasMessageSubfix
+      ? ''
+      : ['both', 'after'].includes(delimitterPosition)
+      ? `${logMessageSubfix}`
+      : ` ${logMessageSubfix}`;
   }
 
   private getDelimitterForMsgContent(
@@ -240,6 +261,7 @@ export class JSDebugMessage extends DebugMessage {
       lineOfSelectedVar,
       selectedVar,
     );
+    console.log('❗ ➽ logMsgType ➽ ⏩', logMsgType);
     const lineOfLogMsg: number = this.line(
       document,
       lineOfSelectedVar,

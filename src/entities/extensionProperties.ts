@@ -17,6 +17,7 @@ export type ExtensionProperties = {
   logMessageSubfix: string;
   hasMessageSubfix: boolean;
   delimitterPosition: enumDelimiterPosition;
+  hasFilePrefix: boolean;
 };
 
 export enum enumLogType {
@@ -32,7 +33,7 @@ export enum enumDelimiterPosition {
   before = 'before',
   after = 'after',
   both = 'both',
-  none = 'none'
+  none = 'none',
 }
 
 export type PartialExtensionProperties = Omit<

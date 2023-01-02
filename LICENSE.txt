@@ -1,0 +1,2 @@
+Fork from https://github.com/tuur29/vscode-turbo-console-log
+All rights and privileges to the extension of Chakroun Anas

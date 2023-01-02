@@ -3,6 +3,7 @@ import { Message } from './message';
 import {
   ExtensionProperties,
   PartialExtensionProperties,
+  enumLogType
 } from './extensionProperties';
 import { BracketType } from './bracketType';
 import { LogMessageType } from './logMessageType';
@@ -12,6 +13,7 @@ export {
   Message,
   ExtensionProperties,
   PartialExtensionProperties,
+  enumLogType,
   BracketType,
   LogMessageType,
   LogBracket,

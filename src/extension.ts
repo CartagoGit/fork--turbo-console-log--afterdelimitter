@@ -177,7 +177,7 @@ function getExtensionProperties(
 ) {
   return {
     wrapLogMessage: workspaceConfig.wrapLogMessage ?? false,
-    logMessagePrefix: workspaceConfig.logMessagePrefix ?? '🚀',
+    logMessagePrefix: workspaceConfig.logMessagePrefix ?? '❗',
     addSemicolonInTheEnd: workspaceConfig.addSemicolonInTheEnd ?? false,
     insertEnclosingClass: workspaceConfig.insertEnclosingClass ?? true,
     insertEnclosingFunction: workspaceConfig.insertEnclosingFunction ?? true,
@@ -186,7 +186,7 @@ function getExtensionProperties(
     insertEmptyLineAfterLogMessage:
       workspaceConfig.insertEmptyLineAfterLogMessage ?? false,
     quote: workspaceConfig.quote ?? '"',
-    delimiterInsideMessage: workspaceConfig.delimiterInsideMessage ?? '~',
+    delimiterInsideMessage: workspaceConfig.delimiterInsideMessage ?? '➽',
     includeFileNameAndLineNum:
       workspaceConfig.includeFileNameAndLineNum ?? false,
     logType: workspaceConfig.logType ?? 'log',
@@ -197,10 +197,12 @@ function getExtensionProperties(
     logMessageSubfix: workspaceConfig.logMessageSubfix ?? '⏩',
     hasMessageSubfix: workspaceConfig.hasMessageSubfix ?? false,
     delimitterPosition: workspaceConfig.delimitterPosition ?? 'before',
+    hasFilePrefix: workspaceConfig.hasFilePrefix ?? false,
   };
 }
 
 function getTabSize(tabSize: string | number | undefined): number {
+  
   if (!tabSize) {
     return 4;
   }
