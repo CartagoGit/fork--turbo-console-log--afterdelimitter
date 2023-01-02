@@ -11,7 +11,7 @@ export type ExtensionProperties = {
   quote: string;
   logType: enumLogType;
   logFunction: string;
-  
+
   //From Fork
   hasMessagePrefix: boolean;
   logMessageSubfix: string;
@@ -19,7 +19,7 @@ export type ExtensionProperties = {
   delimitterPosition: enumDelimiterPosition;
 };
 
-enum enumLogType {
+export enum enumLogType {
   log = 'log',
   warn = 'warn',
   error = 'error',
@@ -28,8 +28,14 @@ enum enumLogType {
 }
 
 //From Fork
-enum enumDelimiterPosition {
+export enum enumDelimiterPosition {
   before = 'before',
   after = 'after',
   both = 'both',
+  none = 'none'
 }
+
+export type PartialExtensionProperties = Omit<
+  ExtensionProperties,
+  'wrapLogMessage' | 'insertEmptyLineAfterLogMessage'
+>;

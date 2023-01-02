@@ -5,6 +5,7 @@ import {
   BracketType,
   LogMessageType,
   Message,
+  PartialExtensionProperties,
 } from '../../entities';
 import { LineCodeProcessing } from '../../line-code-processing';
 import _, { omit } from 'lodash';
@@ -87,11 +88,17 @@ export class JSDebugMessage extends DebugMessage {
     selectedVar: string,
     lineOfSelectedVar: number,
     lineOfLogMsg: number,
-    extensionProperties: Omit<
-      ExtensionProperties,
-      'wrapLogMessage' | 'insertEmptyLineAfterLogMessage'
-    >,
+    extensionProperties: PartialExtensionProperties,
   ): string {
+    const {
+      addSemicolonInTheEnd,
+      includeFileNameAndLineNum,
+      insertEmptyLineBeforeLogMessage,
+      insertEnclosingClass,
+      insertEnclosingFunction,
+      quote,
+    } = extensionProperties;
+
     const fileName = document.fileName.includes('/')
       ? document.fileName.split('/')[document.fileName.split('/').length - 1]
       : document.fileName.split('\\')[document.fileName.split('\\').length - 1];
@@ -105,39 +112,95 @@ export class JSDebugMessage extends DebugMessage {
       lineOfSelectedVar,
       'class',
     );
-    const semicolon: string = extensionProperties.addSemicolonInTheEnd
-      ? ';'
-      : '';
+    const semicolon: string = addSemicolonInTheEnd ? ';' : '';
+
     return `${
-      extensionProperties.logFunction !== 'log'
-        ? extensionProperties.logFunction
-        : `console.${extensionProperties.logType}`
-    }(${extensionProperties.quote}${extensionProperties.logMessagePrefix}${
-      extensionProperties.logMessagePrefix.length !== 0 &&
-      extensionProperties.logMessagePrefix !==
-        `${extensionProperties.delimiterInsideMessage} `
-        ? ` ${extensionProperties.delimiterInsideMessage} `
+      // Function type - Example console.log( ...
+      this.getFunctionForMsgContent(extensionProperties)
+    }(${quote}${
+      // Prefix
+      this.getPrefixForMsgContent(extensionProperties)
+    }${
+      // File
+      includeFileNameAndLineNum
+        ? `${this.getDelimitterForMsgContent(extensionProperties, true)}
+        file: ${fileName}:${
+            lineOfLogMsg + (insertEmptyLineBeforeLogMessage ? 2 : 1)
+          } ${this.getDelimitterForMsgContent(extensionProperties, false)}`
         : ''
     }${
-      extensionProperties.includeFileNameAndLineNum
-        ? `file: ${fileName}:${
-            lineOfLogMsg +
-            (extensionProperties.insertEmptyLineBeforeLogMessage ? 2 : 1)
-          } ${extensionProperties.delimiterInsideMessage} `
-        : ''
+      // Class
+      this.getEncloseForMsgContent(
+        insertEnclosingClass,
+        classThatEncloseTheVar,
+        extensionProperties,
+      )
     }${
-      extensionProperties.insertEnclosingClass
-        ? classThatEncloseTheVar.length > 0
-          ? `${classThatEncloseTheVar} ${extensionProperties.delimiterInsideMessage} `
-          : ``
-        : ''
+      // Function
+      this.getEncloseForMsgContent(
+        insertEnclosingFunction,
+        funcThatEncloseTheVar,
+        extensionProperties,
+      )
     }${
-      extensionProperties.insertEnclosingFunction
-        ? funcThatEncloseTheVar.length > 0
-          ? `${funcThatEncloseTheVar} ${extensionProperties.delimiterInsideMessage} `
-          : ''
-        : ''
-    }${selectedVar}${extensionProperties.quote}, ${selectedVar})${semicolon}`;
+      // Variable
+      selectedVar
+    }${quote}${
+      // Subfix
+      this.getSubfixForMsgContent(extensionProperties)
+    }, ${selectedVar})${semicolon}`;
+  }
+
+  private getFunctionForMsgContent(
+    extensionProperties: PartialExtensionProperties,
+  ): string {
+    const { logType, logFunction } = extensionProperties;
+    return logFunction !== 'log' ? logFunction : `console.${logType}`;
+  }
+
+  private getPrefixForMsgContent(
+    extensionProperties: PartialExtensionProperties,
+  ): string {
+    const { hasMessagePrefix, logMessagePrefix } = extensionProperties;
+    return hasMessagePrefix ? `${logMessagePrefix} ` : '';
+  }
+
+  private getSubfixForMsgContent(
+    extensionProperties: PartialExtensionProperties,
+  ): string {
+    const { hasMessageSubfix, logMessageSubfix } = extensionProperties;
+    return hasMessageSubfix ? `${logMessageSubfix} ` : '';
+  }
+
+  private getDelimitterForMsgContent(
+    extensionProperties: PartialExtensionProperties,
+    isBeforeMsg: boolean,
+  ): string {
+    const { delimiterInsideMessage, delimitterPosition } = extensionProperties;
+    if (
+      delimitterPosition === 'none' ||
+      (!!isBeforeMsg && 'after' === delimitterPosition) ||
+      (!isBeforeMsg && 'before' === delimitterPosition)
+    )
+      return '';
+    return ` ${delimiterInsideMessage} `;
+  }
+
+  private getEncloseForMsgContent(
+    condition: boolean,
+    encloserTheVar: string,
+    extensionProperties: PartialExtensionProperties,
+  ): string {
+    if (!!condition && encloserTheVar.length > 0) {
+      return `${this.getDelimitterForMsgContent(
+        extensionProperties,
+        true,
+      )}${encloserTheVar} ${this.getDelimitterForMsgContent(
+        extensionProperties,
+        false,
+      )}`;
+    }
+    return '';
   }
 
   private emptyBlockDebuggingMsg(
