@@ -11,6 +11,12 @@ export type ExtensionProperties = {
   quote: string;
   logType: enumLogType;
   logFunction: string;
+  
+  //From Fork
+  hasMessagePrefix: boolean;
+  logMessageSubfix: string;
+  hasMessageSubfix: boolean;
+  delimitterPosition: enumDelimiterPosition;
 };
 
 enum enumLogType {
@@ -19,4 +25,11 @@ enum enumLogType {
   error = 'error',
   debug = 'debug',
   table = 'table',
+}
+
+//From Fork
+enum enumDelimiterPosition {
+  before = 'before',
+  after = 'after',
+  both = 'both',
 }

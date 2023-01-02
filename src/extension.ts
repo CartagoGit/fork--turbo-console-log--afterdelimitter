@@ -177,7 +177,7 @@ function getExtensionProperties(
 ) {
   return {
     wrapLogMessage: workspaceConfig.wrapLogMessage ?? false,
-    logMessagePrefix: workspaceConfig.logMessagePrefix ?? '',
+    logMessagePrefix: workspaceConfig.logMessagePrefix ?? '🚀',
     addSemicolonInTheEnd: workspaceConfig.addSemicolonInTheEnd ?? false,
     insertEnclosingClass: workspaceConfig.insertEnclosingClass ?? true,
     insertEnclosingFunction: workspaceConfig.insertEnclosingFunction ?? true,
@@ -191,6 +191,12 @@ function getExtensionProperties(
       workspaceConfig.includeFileNameAndLineNum ?? false,
     logType: workspaceConfig.logType ?? 'log',
     logFunction: workspaceConfig.logFunction ?? 'log',
+
+    //From Fork
+    hasMessagePrefix: workspaceConfig.hasMessagePrefix ?? true,
+    logMessageSubfix: workspaceConfig.logMessageSubfix ?? '⏩',
+    hasMessageSubfix: workspaceConfig.hasMessageSubfix ?? false,
+    delimitterPosition: workspaceConfig.delimitterPosition ?? 'before',
   };
 }
 

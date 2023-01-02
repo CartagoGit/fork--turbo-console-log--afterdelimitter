@@ -1,9 +1,9 @@
 {
   "name": "turbo-console-log",
-  "displayName": "Turbo Console Log",
+  "displayName": "Turbo Console Log - Fork by Cartago adding functionality",
   "description": "Automating the process of writing meaningful log messages.",
   "version": "2.6.2",
-  "publisher": "ChakrounAnas",
+  "publisher": "Cartago Nova",
   "engines": {
     "vscode": "^1.50.0"
   },
@@ -32,6 +32,21 @@
           "type": "string",
           "default": "🚀",
           "description": "The prefix of the log message."
+        },
+        "turboConsoleLog.hasMessagePrefix": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Show/hide prefix of the log message"
+        },
+        "turboConsoleLog.logMessageSubfix": {
+          "type": "string",
+          "default": "⏩",
+          "description": "The subfix of the log message before the variable."
+        },
+        "turboConsoleLog.hasMessageSubfix": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Show/hide subfix of the log message"
         },
         "turboConsoleLog.includeFileNameAndLineNum": {
           "type": "boolean",
@@ -94,6 +109,14 @@
           "type": "string",
           "default": "log",
           "description": "Specify a log function (when specified logType will be ignored)"
+        },
+        "turboConsoleLog.delimitterPosition": {
+          "type": "string",
+          "enum" : [
+            "before", "after", "both"
+          ],
+          "default": "before",
+          "description": "It assigns the position of the delimitter between elements"
         }
       }
     },
@@ -172,7 +195,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Chakroun-Anas/turbo-console-log"
+    "url": "https://github.com/CartagoGit/fork--turbo-console-log--afterdelimitter"
   },
   "__metadata": {
     "id": "6623619a-676d-4cde-943f-a3c193b44fc0",
